@@ -1,6 +1,7 @@
 package ro.devmind.devmind_fullstack_project.model;
 
 import jakarta.persistence.*;
+import ro.devmind.devmind_fullstack_project.enums.ServiceStatus;
 
 import java.util.Date;
 
@@ -17,15 +18,13 @@ public class UserToServices {
 
     @ManyToOne
     @JoinColumn(name = "service_id")
-    private Service service;
+    private VendorService vendorService;
 
     @Column
     private Date serviceDate;
 
     @Column
-    private Integer status;
+    private ServiceStatus status;
 
-    @Column//confirmation attachment
-    private byte[]  proofOfUse;
 
 }

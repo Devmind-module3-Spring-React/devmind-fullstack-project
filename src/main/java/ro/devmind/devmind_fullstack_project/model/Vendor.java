@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Blob;
 
 @Entity
 @Table(name="vendors")
@@ -18,7 +17,7 @@ public class Vendor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="user_id")
     private User user; // Link to user account ->> vendor is also an user
 
@@ -28,11 +27,7 @@ public class Vendor {
     @Column
     private Double rating;
 
-    @Lob
-    @Column
-    private Blob proofOfUse;
 
-
-
+    //TODO: add portfolio
 
 }

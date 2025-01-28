@@ -3,13 +3,17 @@ package ro.devmind.devmind_fullstack_project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ro.devmind.devmind_fullstack_project.model.Service;
-import ro.devmind.devmind_fullstack_project.model.User;
-import ro.devmind.devmind_fullstack_project.model.Vendor;
+import ro.devmind.devmind_fullstack_project.enums.ReviewStatus;
+import ro.devmind.devmind_fullstack_project.enums.UserRoles;
+import ro.devmind.devmind_fullstack_project.model.*;
+import ro.devmind.devmind_fullstack_project.repository.RoleRepository;
+import ro.devmind.devmind_fullstack_project.repository.UsersRepository;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +24,13 @@ public class DevmindFullstackProjectApplication implements CommandLineRunner {
     @PersistenceContext
     private EntityManager entityManager;
 
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private UsersRepository usersRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(DevmindFullstackProjectApplication.class, args);
     }
@@ -27,58 +38,67 @@ public class DevmindFullstackProjectApplication implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-//        User user1 = new User();
-//        user1.setFirstName("Johna");
-//        user1.setName("Doea");
-//        user1.setEmail("blaa@blablablaa.com");
-//        user1.setPassword("passworda");
-//
-////
-//        Service service1 = new Service();
-//        service1.setName("fotografie_service1");
-//        service1.setDescription("ofer servicii de fotografiere");
-//        service1.setVendor(entityManager.find(Vendor.class, 1));
-//        entityManager.persist(service1);
+        // Create a user
+        User user = new User();
+        user.setUsername("testuser3");
+        user.setEmail("testuser3@example3.com");
+        user.setFirstName("FirstNameTest3");
+        user.setName("User3");
+        user.setPassword("password3");
+        user.setCreatedAt(LocalDateTime.now());
+
+        Role adminRole = roleRepository.findByName(UserRoles.ADMIN);
+        Role vendorRole = roleRepository.findByName(UserRoles.VENDOR);
+
+        // Set user roles
+        Set<Role> roles = new HashSet<>();
+        roles.add(adminRole);
+        roles.add(vendorRole);
+        user.setRoles(roles);
 
 
-//        user1.setChosenServices(Set.of(service1));
-//        entityManager.persist(user1);
-//		user1.setChosenServices(new HashSet<>());
-//		user1.getChosenServices().add(service1);
-//		System.out.println(user1.getChosenServices().toString());
-//
-//
-//
-//
-//		entityManager.persist(user1);
-//		entityManager.persist(service1);
+        // Create a vendor
+        Vendor vendor = new Vendor();
+        vendor.setUser(user);
+        vendor.setCompanyName("Test Vendor33");
+        vendor.setRating(3.3);
 
 
-		// Create and persist a new user
-		User user1 = new User();
-		user1.setFirstName("John");
-		user1.setName("Doe");
-		user1.setEmail("johnDoe@blablablaa.com");
-		user1.setPassword("password");
-		entityManager.persist(user1);
+        // Create a vendorService
+        VendorService vendorService = new VendorService();
+        vendorService.setName("Test VendorService3");
+        vendorService.setDescription("This is a test vendorService3.");
+        vendorService.setCategory("Test Category3");
+        vendorService.setVendor(vendor);
+        vendorService.setRating(1.3);
+//      vendorService.setCreatedAt(LocalDateTime.now());
 
-		// Create and persist a new vendor
-		Vendor vendor1 = new Vendor();
-		vendor1.setUser(user1);
-		vendor1.setCompanyName("Doe John Photography");
-		entityManager.persist(vendor1);
+        // Set chosen vendor services
+        Set<VendorService> chosenVendorServices = new HashSet<>();
+        chosenVendorServices.add(vendorService);
+        user.setChosenVendorServices(chosenVendorServices);
 
-		// Create a new service and associate it with the vendor
-		Service service1 = new Service();
-		service1.setName("fotografie_service John Doe");
-		service1.setDescription("ofer servicii de fotografiere by John Doe");
-		service1.setVendor(vendor1); // Set the vendor for the service
+        // Persist the user, vendor, and vendorService ->> see cascading from User, UserToServices, Vendor, VendorServices
+        entityManager.persist(user);
 
-		// Set the relationship between user and service
-		user1.setChosenServices(Set.of(service1));
+        // Create a vendorService review
+        ServiceReview review = new ServiceReview();
+        review.setVendorService(vendorService);
+        review.setUser(user);
+        review.setTitle("NOT Great VendorService3!");
+        review.setBody("The vendorService3 was BAD.");
+        review.setRating(5);
+        review.setProofOfUse(null);
+        review.setProofFilename(null);
+        review.setProofContentType(null);
+        review.setServiceDate(LocalDateTime.now());
+        review.setStatus(ReviewStatus.PENDING);
+//        review.setCreatedAt(LocalDateTime.now());
+//        review.setUpdatedAt(LocalDateTime.now());
 
-		// Persist the service (cascading will persist the service)
-		entityManager.persist(service1);
+
+        entityManager.persist(review);
+
 
     }
 

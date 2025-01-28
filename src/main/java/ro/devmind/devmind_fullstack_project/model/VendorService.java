@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ import java.util.Set;
 @Table(name="services")
 @RequiredArgsConstructor
 @Data
-public class Service {
+public class VendorService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +30,7 @@ public class Service {
     @Column
     private Double rating;
 
-    @Lob
-    @Column
-    private Blob proofOfUse;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "vendor_id", nullable = false)
     private Vendor vendor;
 
@@ -43,14 +38,12 @@ public class Service {
     private LocalDateTime createdAt;
 
 
-    @ManyToMany(mappedBy = "chosenServices")
+    @ManyToMany(mappedBy = "chosenVendorServices")
     @JsonIgnore
     public Set<User> users;
 
-    @OneToMany(mappedBy = "service")
+    @OneToMany(mappedBy = "vendorService")
     @JsonIgnore
     private Set<UserToServices> serviceRegistrationDetails;
-
-
 
 }
