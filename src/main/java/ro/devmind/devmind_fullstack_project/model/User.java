@@ -12,6 +12,7 @@ import java.util.Set;
 @Data
 @RequiredArgsConstructor
 
+//Persisting user also updates services, user_to_services, and vendors table
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +42,17 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "service_id")
     )
-    public Set<Service> chosenServices;
+    public Set<VendorService> chosenVendorServices;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private Set<UserToServices> serviceRegistrationDetails;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_to_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    public Set<Role> roles;
 }
