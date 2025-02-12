@@ -5,6 +5,8 @@ import lombok.Setter;
 import ro.devmind.devmind_fullstack_project.enums.ReviewStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "service_reviews")
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
 public class ServiceReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id", nullable = false)
@@ -31,17 +33,31 @@ public class ServiceReview {
     @Column(nullable = false)
     private Integer rating;
 
-    @Lob
-    private byte[] proofOfUse;
+    @Column(name="upvotes")
+    private Integer upvotes;
 
-    private String proofFilename;
+    @Column(name="downvotes")
+    private Integer downvotes;
 
-    private String proofContentType;
-
-    private LocalDateTime serviceDate;  // Added field for vendorService date
+    @OneToMany(mappedBy = "serviceReview", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> attachments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private ReviewStatus status = ReviewStatus.PENDING;
+
+    //Instead of permanently deleting - add deleted column for softDeleting reviews
+    @Column
+    private boolean deleted = false;
+
+
+    public void softDelete() {
+        this.deleted = true;
+    }
+
+    // Can restore review
+    public void restore() {
+        this.deleted = false;
+    }
 
     private LocalDateTime createdAt;
 

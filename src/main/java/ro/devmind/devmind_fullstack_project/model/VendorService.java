@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,7 +22,7 @@ public class VendorService {
     @Column(name="service_name", nullable = false)
     private String name;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column
@@ -37,7 +38,6 @@ public class VendorService {
     @Column
     private LocalDateTime createdAt;
 
-
     @ManyToMany(mappedBy = "chosenVendorServices")
     @JsonIgnore
     public Set<User> users;
@@ -45,5 +45,18 @@ public class VendorService {
     @OneToMany(mappedBy = "vendorService")
     @JsonIgnore
     private Set<UserToServices> serviceRegistrationDetails;
+
+    // Portfolio items for this service. Can be added only by Vendors
+    @OneToMany(mappedBy = "vendorService", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> attachments;
+
+    //  User reviews for this service.
+    @OneToMany(mappedBy = "vendorService", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ServiceReview> reviews;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
 }
