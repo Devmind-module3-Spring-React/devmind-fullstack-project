@@ -16,7 +16,7 @@ import ro.devmind.devmind_fullstack_project.enums.UserRoles;
 public class Role {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, unique = true)

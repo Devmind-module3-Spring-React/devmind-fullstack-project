@@ -3,7 +3,9 @@ package ro.devmind.devmind_fullstack_project.model;
 import jakarta.persistence.*;
 import ro.devmind.devmind_fullstack_project.enums.ServiceStatus;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="users_to_services")
@@ -21,10 +23,13 @@ public class UserToServices {
     private VendorService vendorService;
 
     @Column
-    private Date serviceDate;
+    private Date dateOfService;
 
+    @Enumerated(EnumType.STRING)
     @Column
-    private ServiceStatus status;
+    private ServiceStatus status; //BOOKED, USED, CANCELLED
 
+    @OneToMany(mappedBy = "userToServices", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> proofOfUse = new ArrayList<>();
 
 }

@@ -1,0 +1,8 @@
+package ro.devmind.devmind_fullstack_project.exception;
+
+public class UsernameAlreadyExistsException extends RuntimeException {
+
+    public UsernameAlreadyExistsException(String message) {
+        super(message);
+    }
+}

@@ -36,6 +36,9 @@ public class User {
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "users_to_services",
@@ -55,4 +58,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     public Set<Role> roles;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
