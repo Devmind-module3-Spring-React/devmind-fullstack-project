@@ -67,6 +67,7 @@ public class Vendor {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<VendorService> vendorServices;
 
     @PrePersist
