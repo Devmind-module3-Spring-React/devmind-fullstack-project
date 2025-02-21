@@ -20,7 +20,7 @@ public class UserToServices {
 
     @ManyToOne
     @JoinColumn(name = "service_id")
-    private VendorService vendorService;
+    private VendorServices vendorServices;
 
     @Column
     private Date dateOfService;

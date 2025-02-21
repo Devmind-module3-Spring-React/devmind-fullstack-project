@@ -37,26 +37,16 @@ function App(props) {
         },
         {kind: 'divider'},
         {
-            segment: 'write-review',
-            title: 'Scrie un review',
-            icon: <DescriptionIcon/>,
-        },
-        {
             segment: 'vendors',
             title: 'Furnizori de servicii',
             icon: <CoPresentIcon/>,
-            // pattern: 'vendors{/:vendorId}*',
+            pattern: 'vendors{/:vendorId}*',
         },
         ...(session && session.user ? [
             {
-                segment: 'profile',
-                title: 'Profile',
-                icon: <CoPresentIcon />,
-            },
-            {
-                segment: 'settings',
-                title: 'Settings',
-                icon: <DescriptionIcon />,
+                segment: 'write-review',
+                title: 'Scrie un review',
+                icon: <DescriptionIcon/>,
             },
         ] : []),
     ];
@@ -86,7 +76,7 @@ function App(props) {
             navigation={NAVIGATION}
             branding={{
                 logo: <img
-                    src="https://www.svgrepo.com/show/12098/wedding.svg"
+                    src="https://www.svgrepo.com/show/248010/stars-star.svg"
                     alt="Wedding Vibe logo"
                     style={{
                         width: '50px',
@@ -97,6 +87,7 @@ function App(props) {
                 homeUrl: 'api/home',
             }}
         >
+            {/*Outlet is the current displayed component according to the routing from main.jsx*/}
             <Outlet/>
 
         </ReactRouterAppProvider>

@@ -19,7 +19,7 @@ public class ServiceReview {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id", nullable = false)
-    private VendorService vendorService;
+    private VendorServices vendorServices;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

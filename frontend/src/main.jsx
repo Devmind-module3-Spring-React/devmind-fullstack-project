@@ -27,18 +27,21 @@ const router = createBrowserRouter([
                         Component: VendorsList,
                     },
                     {
-                        path: 'vendors/:vendorId',
+                        path: 'vendors/:vendorId/services',
                         element: <VendorService />,
-                        pattern: 'vendors{/:vendorId}*',
                     },
+                    // {
+                    //     path: 'vendors/create',
+                    //     Component: CreateVendor,
+                    // },
                     {
                         path: 'write-review/',
                         Component: WriteReview,
                     },
-                    {
-                        path: 'write-review/:userName',
-                        Component: WriteReview,
-                    },
+                    // {
+                    //     path: 'write-review/:userName',
+                    //     Component: WriteReview,
+                    // },
                 ],
             },
         ],

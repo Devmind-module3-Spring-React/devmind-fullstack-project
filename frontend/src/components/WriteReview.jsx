@@ -11,9 +11,8 @@ export default function WriteReview() {
     return (
         <div>
             <h3>{`Hello, ${userName}!`}</h3>
-            <h1>Welcome to my page!</h1>
-            <h2>This is my Devmind FullStack project!</h2>
-            <button onClick={() => navigate('/vendors')}>Go to VENDORS section</button>
+            <h1>Scrie un review pentru furnizorii de servicii de la evenimentul tau</h1>
+            <button onClick={() => navigate('/vendors')}>Navigheaza la sectiunea FURNIZORI</button>
         </div>
     );
 }
