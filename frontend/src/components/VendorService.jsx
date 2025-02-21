@@ -1,17 +1,20 @@
 // VendorServices.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import {useLocation, useParams} from 'react-router';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Card, CardContent, CircularProgress } from '@mui/material';
+import { Card, CardContent, CircularProgress, Rating } from '@mui/material';
 
 const VendorServices = () => {
     const { vendorId } = useParams();
     const [vendorServices, setVendorServices] = useState([]);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();  //  Get the navigation state
+    const servicesLink = location.state?.servicesLink; // Get the HATEOAS link from navigation state
 
     useEffect(() => {
-        fetch(`http://localhost:8081/vendors/${vendorId}`)
+
+        fetch(servicesLink)
             .then(response => response.json())
             .then(data => {
                 setVendorServices(data);
@@ -21,7 +24,7 @@ const VendorServices = () => {
                 console.error('Error fetching vendor services:', error);
                 setLoading(false);
             });
-    }, [vendorId]);
+    }, [servicesLink]);
 
     if (loading) {
         return <CircularProgress />;
@@ -29,7 +32,7 @@ const VendorServices = () => {
 
     return (
         <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>Services</Typography>
+            <Typography variant="h4" gutterBottom>Servicii</Typography>
             <Box
                 sx={{
                     display: 'flex',
@@ -42,6 +45,16 @@ const VendorServices = () => {
                         <CardContent>
                             <Typography variant="h6">{service.name}</Typography>
                             <Typography variant="body2" color="textSecondary">{service.description}</Typography>
+                            <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
+                                <Rating
+                                    value={service.rating || 0}
+                                    precision={0.1}
+                                    readOnly={true}
+                                />
+                                <Typography variant="body1" color="primary" sx={{ ml: 1 }}>
+                                    {service.rating ? service.rating.toFixed(1) : 'N/A'}
+                                </Typography>
+                            </Box>
                         </CardContent>
                     </Card>
                 ))}

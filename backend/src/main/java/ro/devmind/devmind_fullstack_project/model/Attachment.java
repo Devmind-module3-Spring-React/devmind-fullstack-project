@@ -35,7 +35,7 @@ public class Attachment {
 
     @ManyToOne
     @JoinColumn (name = "vendor_service_id")
-    private VendorService vendorService; //populate this column if vendor Portfolio attachment
+    private VendorServices vendorServices; //populate this column if vendor Portfolio attachment
 
     @ManyToOne
     @JoinColumn(name = "user_to_services_id", nullable = true)

@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name="services")
 @RequiredArgsConstructor
 @Data
-public class VendorService {
+public class VendorServices {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,16 +42,16 @@ public class VendorService {
     @JsonIgnore
     public Set<User> users;
 
-    @OneToMany(mappedBy = "vendorService")
+    @OneToMany(mappedBy = "vendorServices")
     @JsonIgnore
     private Set<UserToServices> serviceRegistrationDetails;
 
     // Portfolio items for this service. Can be added only by Vendors
-    @OneToMany(mappedBy = "vendorService", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "vendorServices", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments;
 
     //  User reviews for this service.
-    @OneToMany(mappedBy = "vendorService", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "vendorServices", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceReview> reviews;
 
     @PrePersist

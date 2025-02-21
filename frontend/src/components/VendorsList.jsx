@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import {useEffect, useState} from "react";
 import Typography from "@mui/material/Typography";
-import {Card, CardContent, CircularProgress} from "@mui/material";
+import {Button, Card, CardContent, CircularProgress} from "@mui/material";
 import {useNavigate} from "react-router";
 
 const VendorsList = () => {
@@ -9,45 +9,70 @@ const VendorsList = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    // const [vendorLinks, setVendorLinks] = useState({}); // Stores HATEOAS links for each vendor
+
+
     useEffect(() => {
-        fetch("http://localhost:8081/vendors")
-            .then((response) => response.json()) // Convert response to JSON
+        fetch("http://localhost:8081/api/v1/vendors")
+            .then((response) => response.json())
             .then((data) => {
-                setVendors(data);  // Set vendors data
-                setLoading(false);  // Set loading to false once data is fetched
+                setVendors(data);
+                setLoading(false);
             })
             .catch((error) => {
                 console.error("There was an error fetching the vendors!", error);
-                setLoading(false);  // Stop loading on error
+                setLoading(false);
             });
     }, []);
 
     if (loading) {
-        return <CircularProgress />;
+        return <CircularProgress/>;
     }
 
+    const navigateToServices = (vendor) => {
+        // Use the HATEOAS services link directly instead of fetching http://localhost:8081/api/v1/vendors/{vendorId}/services
+        //HATEOAS response when calling http://localhost:8081/api/v1/vendors has links attached.
+        // The link with rel name "services" is of interest in this case -> contains the backend route to vendor's services: http://localhost:8081/api/v1/vendors/{vendorId}
+        const servicesLink = vendor.links.find(link => link.rel === "services")?.href
+
+        if (servicesLink) {
+            navigate(`/vendors/${vendor.id}/services`, {state: {servicesLink}});
+        } else {
+            console.error(`No services link found for vendor ID: ${vendor.id}`);
+        }
+    };
+
     return (
-        <Box sx={{ padding: 3 }}>
-            {/*<Typography variant="h4" gutterBottom>Furnizori de Servicii</Typography>*/}
+        <Box sx={{padding: 3}}>
             <Box
                 sx={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: 2, // Creates a gap between the cards
+                    gap: 2, // Add gap between the cards
                 }}
             >
                 {vendors.map((vendor) => (
 
                     <Box key={vendor.id} sx={{width: {xs: '100%', sm: '48%', md: '30%'}}}>
                         <Card
-                            key={vendor.id}
-                            onClick={() => navigate(`/vendors/${vendor.id}`)}
+                            onClick={() => navigateToServices(vendor)}
+                            sx={{cursor: 'pointer', padding: 2}}
                         >
 
                             <CardContent>
                                 <Typography variant="h6">{vendor.companyName}</Typography>
                                 <Typography variant="body2" color="textSecondary">{vendor.location}</Typography>
                                 <Typography variant="body2" sx={{mt: 2}}>{vendor.description}</Typography>
+                                <Typography variant="body2" sx={{mt: 2}}>{vendor.phoneNumber}</Typography>
+                                <Typography variant="body2" sx={{mt: 2}}>
+                                    <a
+                                        onClick={(event) => event.stopPropagation()} // Prevents Card's onClick from triggering when clicking vendor's website
+                                        href={vendor.websiteUrl}
+                                        target="_blank" rel="noopener noreferrer"
+                                        style={{color: 'blue', textDecoration: 'underline'}}>
+                                        {vendor.websiteUrl}
+                                    </a>
+                                </Typography>
                                 <Typography variant="body1" color="primary" sx={{mt: 2}}>
                                     Rating: {vendor.rating ? vendor.rating : 'N/A'}
                                 </Typography>
@@ -56,6 +81,14 @@ const VendorsList = () => {
                     </Box>
                 ))}
             </Box>
+            <Button
+                variant="contained"
+                color="primary"
+                // onClick={navigateToCreateVendor}
+                sx={{ marginTop: 2}}
+            >
+                Adauga un nou furnizor
+            </Button>
         </Box>
     );
 }

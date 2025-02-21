@@ -45,7 +45,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "service_id")
     )
-    public Set<VendorService> chosenVendorServices;
+    public Set<VendorServices> chosenVendorServices;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore

@@ -39,7 +39,7 @@ public class Vendor {
     private String description;
 
     @Column
-    private Double rating;
+    private double rating;
 
     @Column(name = "profile_picture", columnDefinition = "TEXT") // Base64 profile picture
     private String profilePicture;
@@ -68,7 +68,7 @@ public class Vendor {
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<VendorService> vendorServices;
+    private List<VendorServices> vendorServices;
 
     @PrePersist
     protected void onCreate() {
