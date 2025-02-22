@@ -13,8 +13,10 @@ const VendorServices = () => {
     const servicesLink = location.state?.servicesLink; // Get the HATEOAS link from navigation state
 
     useEffect(() => {
+        //Added fetchUrl for the case when user decides to manually navigate using browserURL
+        const fetchUrl = servicesLink || `http://localhost:8081/api/v1/vendors/${vendorId}/services`;
 
-        fetch(servicesLink)
+        fetch(fetchUrl)
             .then(response => response.json())
             .then(data => {
                 setVendorServices(data);
@@ -24,7 +26,7 @@ const VendorServices = () => {
                 console.error('Error fetching vendor services:', error);
                 setLoading(false);
             });
-    }, [servicesLink]);
+    }, [servicesLink,vendorId]);
 
     if (loading) {
         return <CircularProgress />;

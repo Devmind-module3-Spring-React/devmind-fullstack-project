@@ -8,6 +8,7 @@ import VendorsList from "./components/VendorsList.jsx";
 import WriteReview from "./components/WriteReview.jsx";
 import DashboardPage from "./components/DashboardPage.jsx";
 import VendorService from "./components/VendorService.jsx";
+import AddVendor from "./components/AddVendor.jsx";
 
 
 const router = createBrowserRouter([
@@ -30,10 +31,10 @@ const router = createBrowserRouter([
                         path: 'vendors/:vendorId/services',
                         element: <VendorService />,
                     },
-                    // {
-                    //     path: 'vendors/create',
-                    //     Component: CreateVendor,
-                    // },
+                    {
+                        path: 'vendors/add',
+                        Component: AddVendor,
+                    },
                     {
                         path: 'write-review/',
                         Component: WriteReview,

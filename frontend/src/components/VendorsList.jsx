@@ -3,11 +3,14 @@ import {useEffect, useState} from "react";
 import Typography from "@mui/material/Typography";
 import {Button, Card, CardContent, CircularProgress} from "@mui/material";
 import {useNavigate} from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import {setVendors} from "../redux/reducers/reducers.js";
 
 const VendorsList = () => {
-    const [vendors, setVendors] = useState([]);
+    const vendors = useSelector((state) => state.vendors.vendors);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // const [vendorLinks, setVendorLinks] = useState({}); // Stores HATEOAS links for each vendor
 
@@ -16,7 +19,7 @@ const VendorsList = () => {
         fetch("http://localhost:8081/api/v1/vendors")
             .then((response) => response.json())
             .then((data) => {
-                setVendors(data);
+                dispatch(setVendors(data)); //dispatch action to the store. action passes through the setVendor reducer
                 setLoading(false);
             })
             .catch((error) => {
@@ -40,6 +43,10 @@ const VendorsList = () => {
         } else {
             console.error(`No services link found for vendor ID: ${vendor.id}`);
         }
+    };
+
+    const navigateToAddNewVendor = () => {
+            navigate(`/vendors/add`);
     };
 
     return (
@@ -84,7 +91,7 @@ const VendorsList = () => {
             <Button
                 variant="contained"
                 color="primary"
-                // onClick={navigateToCreateVendor}
+                onClick={navigateToAddNewVendor}
                 sx={{ marginTop: 2}}
             >
                 Adauga un nou furnizor

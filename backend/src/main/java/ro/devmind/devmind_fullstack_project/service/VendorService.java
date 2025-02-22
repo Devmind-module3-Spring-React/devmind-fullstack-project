@@ -1,13 +1,17 @@
 package ro.devmind.devmind_fullstack_project.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.devmind.devmind_fullstack_project.dto.vendor.VendorCreateDto;
 import ro.devmind.devmind_fullstack_project.exception.DuplicateResourceException;
 import ro.devmind.devmind_fullstack_project.exception.ResourceNotFoundException;
+import ro.devmind.devmind_fullstack_project.model.User;
 import ro.devmind.devmind_fullstack_project.model.Vendor;
 import ro.devmind.devmind_fullstack_project.model.VendorServices;
+import ro.devmind.devmind_fullstack_project.repository.UsersRepository;
 import ro.devmind.devmind_fullstack_project.repository.VendorsRepository;
 
 import java.time.LocalDateTime;
@@ -17,8 +21,9 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class VendorService {
+    //fields are final so they do not require Autowired, injection is handled by RequiredArgsConstructor
     private final VendorsRepository vendorRepository;
-    private final UserService userService;
+    private final UsersRepository userRepository; //TODO: only for getting user ID sent hardcoded from frontend. to be removed later
 
     public List<Vendor> getAllVendors() {
         return vendorRepository.findAll();
@@ -52,11 +57,15 @@ public class VendorService {
 //        vendor.setDescription(createDto.getDescription());
         vendor.setWebsiteUrl(createDto.getWebsiteUrl());
         vendor.setPhoneNumber(createDto.getPhoneNumber());
-//        vendor.setCreatedByUser(userService.getCurrentUser());
+        User user = userRepository.findById(createDto.getCreatedByUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        vendor.setCreatedByUser(user);
         vendor.setCreatedAt(LocalDateTime.now());
 
         return vendorRepository.save(vendor);
     }
+
 
 //    public Vendor updateVendor(Integer id, VendorResponseDto updateDto) {
 //        Vendor vendor = getVendorById(id);
