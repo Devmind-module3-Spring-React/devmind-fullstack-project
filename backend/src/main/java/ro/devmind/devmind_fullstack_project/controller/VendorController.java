@@ -1,5 +1,6 @@
 package ro.devmind.devmind_fullstack_project.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.devmind.devmind_fullstack_project.assembler.vendor.VendorResponseAssembler;
 import ro.devmind.devmind_fullstack_project.assembler.vendor.VendorSummaryAssembler;
+import ro.devmind.devmind_fullstack_project.dto.vendor.VendorCreateDto;
 import ro.devmind.devmind_fullstack_project.dto.vendor.VendorResponseDto;
 import ro.devmind.devmind_fullstack_project.dto.vendor.VendorSummaryResponseDto;
 import ro.devmind.devmind_fullstack_project.model.Vendor;
@@ -34,6 +36,12 @@ public class VendorController {
     public ResponseEntity<List<VendorSummaryResponseDto>> getAllVendors() {
         List<Vendor> vendors = vendorService.getAllVendors();
         return ResponseEntity.ok(vendorSummaryAssembler.toModelList(vendors));
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<Vendor> addVendor(@Valid @RequestBody VendorCreateDto vendtorCreateDto) {
+        Vendor newVendor = vendorService.createVendor(vendtorCreateDto);
+        return ResponseEntity.ok(newVendor);
     }
 
     @GetMapping("/{vendorId}/services")

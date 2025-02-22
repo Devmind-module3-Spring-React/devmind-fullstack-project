@@ -18,4 +18,6 @@ public class VendorCreateDto {
     private String websiteUrl;
 
     private String phoneNumber;
+
+    private Integer createdByUserId;
 }

@@ -6,10 +6,11 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import {ReactRouterAppProvider} from "@toolpad/core/react-router";
 import {Outlet} from "react-router";
+import {Provider} from "react-redux";
+import store from "./redux/stores/stores.js";
 
 
 function App(props) {
-
 
     const {window} = props;
 
@@ -28,7 +29,7 @@ function App(props) {
         },
         {
             title: 'Home',
-            icon: <DashboardIcon />,
+            icon: <DashboardIcon/>,
         },
         {
             segment: 'login',
@@ -70,28 +71,30 @@ function App(props) {
 
 
     return (
-        <ReactRouterAppProvider
-            session={session}
-            authentication={authentication}
-            navigation={NAVIGATION}
-            branding={{
-                logo: <img
-                    src="https://www.svgrepo.com/show/248010/stars-star.svg"
-                    alt="Wedding Vibe logo"
-                    style={{
-                        width: '50px',
-                        height: 'auto',
-                        maxWidth: '90%'
-                    }}/>,
-                title: 'Wedding Vibes',
-                homeUrl: 'api/home',
-            }}
-        >
-            {/*Outlet is the current displayed component according to the routing from main.jsx*/}
-            <Outlet/>
+        <Provider store={store}>
+            <ReactRouterAppProvider
+                session={session}
+                authentication={authentication}
+                navigation={NAVIGATION}
+                branding={{
+                    logo: <img
+                        src="https://www.svgrepo.com/show/248010/stars-star.svg"
+                        alt="Wedding Vibe logo"
+                        style={{
+                            width: '50px',
+                            height: 'auto',
+                            maxWidth: '90%'
+                        }}/>,
+                    title: 'Wedding Vibes',
+                    homeUrl: 'api/home',
+                }}
+            >
+                {/*Outlet is the current displayed component according to the routing from main.jsx*/}
+                <Outlet/>
 
-        </ReactRouterAppProvider>
-        // preview-end
+            </ReactRouterAppProvider>
+            // preview-end
+        </Provider>
     );
 }
 
