@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {addVendor} from "../redux/reducers/reducers.js";
 import {useNavigate} from "react-router";
 import {Button, Card, CardContent, TextField} from "@mui/material";
@@ -10,8 +10,19 @@ const AddVendor = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    //TODO: after adding authentication gen the userId from redux state or from JWT Token
-    const userId = 2;
+    //user is stored in the auth slice from redux. so not state.user but state.auth.user
+    const user = useSelector((state) => state.auth.user);
+
+    const jwt = useSelector((state) => state.auth.jwt);
+
+    // Redirect to login if not authenticated - so that user can't add vendor if it is not logged in
+    useEffect(() => {
+        if (!jwt) {
+            navigate("/login");
+        }
+    }, [jwt, navigate]);
+
+    const userId = user?.id;
 
     const [formData, setFormData] = useState({
         companyName: '',

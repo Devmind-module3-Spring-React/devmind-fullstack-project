@@ -9,6 +9,7 @@ import ro.devmind.devmind_fullstack_project.dto.user.UserRegisterDto;
 import ro.devmind.devmind_fullstack_project.enums.UserRoles;
 import ro.devmind.devmind_fullstack_project.model.Role;
 import ro.devmind.devmind_fullstack_project.model.User;
+import ro.devmind.devmind_fullstack_project.repository.RoleRepository;
 import ro.devmind.devmind_fullstack_project.repository.UsersRepository;
 import ro.devmind.devmind_fullstack_project.springJWTauth.JwtService;
 
@@ -19,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UsersRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -39,9 +43,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         user.setEmail(userRegisterDto.getEmail());
         user.setFirstName(userRegisterDto.getFirstName());
+        user.setName(userRegisterDto.getName());
+
         // TODO: remove Set default role to user
-        Role defaultRole = new Role();
-        defaultRole.setName(UserRoles.USER); // Set the default role
+        Role defaultRole = roleRepository.findByName(UserRoles.USER);
+//        defaultRole.setName(UserRoles.USER); // Set the default role
         user.setRoles(Set.of(defaultRole));
 
 
@@ -49,7 +55,7 @@ public class UserService {
     }
 
     public String authenticate(@NotBlank String username, @NotBlank String password) {
-        User user = userRepository.findByUsername(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username or password is incorrect"));
         if (passwordEncoder.matches(password, user.getPassword())) {
             return jwtService.createToken(username);
         }
