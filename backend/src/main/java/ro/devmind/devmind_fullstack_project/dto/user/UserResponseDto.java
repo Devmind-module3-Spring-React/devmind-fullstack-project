@@ -7,6 +7,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Getter
 @Setter
 public class UserResponseDto extends RepresentationModel<UserResponseDto> {
+   private Integer id;
     private String username;
     private String email;
     private String firstName;

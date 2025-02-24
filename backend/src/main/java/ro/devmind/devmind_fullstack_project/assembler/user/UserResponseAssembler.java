@@ -17,6 +17,7 @@ public class UserResponseAssembler extends RepresentationModelAssemblerSupport<U
     public UserResponseDto toModel(User user) {
         UserResponseDto userResponseDto = instantiateModel(user);
 
+        userResponseDto.setId(user.getId());
         userResponseDto.setUsername(user.getUsername());
         userResponseDto.setEmail(user.getEmail());
         userResponseDto.setFirstName(user.getFirstName());

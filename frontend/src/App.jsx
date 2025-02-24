@@ -5,22 +5,54 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import DescriptionIcon from '@mui/icons-material/Description';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import {ReactRouterAppProvider} from "@toolpad/core/react-router";
-import {Outlet} from "react-router";
-import {Provider} from "react-redux";
+import {Outlet, useNavigate} from "react-router";
+import {Provider, useDispatch, useSelector} from "react-redux";
 import store from "./redux/stores/stores.js";
+import {fetchUserFromToken, logout} from "./redux/reducers/authSlice.js";
+import {useEffect} from "react";
 
 
 function App(props) {
 
     const {window} = props;
+    const navigate = useNavigate();
+
+    // Fetch user from the Redux store
+    const userData = useSelector((state) => state.auth.user);
+    const dispatch = useDispatch();
+
 
     const [session, setSession] = React.useState({
         user: {
-            name: 'TestUser',
-            email: 'TestUser@outlook.com',
-            image: 'https://www.eagletechacademy.com/wp-content/uploads/2024/07/user.svg',
+            name: '',
+            email: '',
+            image: '',
         },
     });
+
+    // Persist user between brower tabs - separate redux instances
+    const jwt = useSelector((state) => state.auth.jwt);
+    React.useEffect(() => {
+        if (jwt && !userData) {
+            dispatch(fetchUserFromToken());
+        }
+    }, [jwt, userData, dispatch]);
+
+    // Effect to update session when userData changes
+   useEffect(() => {
+        if (userData?.username && userData?.email) {
+            setSession({
+                user: {
+                    name: userData.username,
+                    email: userData.email,
+                    image: 'https://www.eagletechacademy.com/wp-content/uploads/2024/07/user.svg',
+                },
+            });
+        } else {
+            // Clear session when userData is null
+            setSession(null);
+        }
+    }, [userData]);
 
     const NAVIGATION = [
         {
@@ -55,23 +87,27 @@ function App(props) {
     const authentication = React.useMemo(() => {
         return {
             signIn: () => {
+                if (userData) {
                 setSession({
                     user: {
-                        name: 'TestUser',
-                        email: 'TestUser@outlook.com',
+                        name: userData.username,
+                        email: userData.email,
                         image: 'https://www.eagletechacademy.com/wp-content/uploads/2024/07/user.svg',
                     },
                 });
+                } else {
+                    navigate('/login');
+                }
             },
             signOut: () => {
                 setSession(null);
+                dispatch(logout())
             },
         };
-    }, []);
-
+    }, [dispatch, navigate, userData]);
 
     return (
-        <Provider store={store}>
+        // <Provider store={store}>
             <ReactRouterAppProvider
                 session={session}
                 authentication={authentication}
@@ -86,7 +122,7 @@ function App(props) {
                             maxWidth: '90%'
                         }}/>,
                     title: 'Wedding Vibes',
-                    homeUrl: 'api/home',
+                    homeUrl: '/',
                 }}
             >
                 {/*Outlet is the current displayed component according to the routing from main.jsx*/}
@@ -94,7 +130,7 @@ function App(props) {
 
             </ReactRouterAppProvider>
             // preview-end
-        </Provider>
+        // </Provider>
     );
 }
 

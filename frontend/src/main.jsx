@@ -9,6 +9,9 @@ import WriteReview from "./components/WriteReview.jsx";
 import DashboardPage from "./components/DashboardPage.jsx";
 import VendorService from "./components/VendorService.jsx";
 import AddVendor from "./components/AddVendor.jsx";
+import AuthForm from "./components/LoginSignup/AuthForm.jsx";
+import {Provider} from "react-redux";
+import store from "./redux/stores/stores.js";
 
 
 const router = createBrowserRouter([
@@ -45,12 +48,19 @@ const router = createBrowserRouter([
                     // },
                 ],
             },
+            {
+                path: 'login',
+                Component: AuthForm,
+            },
         ],
     },
+
 ]);
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-      <RouterProvider router={router} />
-  </StrictMode>,
+    <StrictMode>
+        <Provider store={store}>
+            <RouterProvider router={router}/>
+        </Provider>
+    </StrictMode>,
 )
