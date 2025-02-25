@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.devmind.devmind_fullstack_project.assembler.user.UserRegisterAssembler;
 import ro.devmind.devmind_fullstack_project.assembler.user.UserResponseAssembler;
 import ro.devmind.devmind_fullstack_project.dto.user.UserLoginRequestDto;
 import ro.devmind.devmind_fullstack_project.dto.user.UserLoginResponseDto;
 import ro.devmind.devmind_fullstack_project.dto.user.UserRegisterDto;
 import ro.devmind.devmind_fullstack_project.dto.user.UserResponseDto;
 import ro.devmind.devmind_fullstack_project.model.User;
-import ro.devmind.devmind_fullstack_project.service.UserService;
+import ro.devmind.devmind_fullstack_project.service.user.UserService;
 
 @RestController
 public class UserController {

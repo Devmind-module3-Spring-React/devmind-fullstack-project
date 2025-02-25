@@ -7,7 +7,6 @@ import CoPresentIcon from '@mui/icons-material/CoPresent';
 import {ReactRouterAppProvider} from "@toolpad/core/react-router";
 import {Outlet, useNavigate} from "react-router";
 import {Provider, useDispatch, useSelector} from "react-redux";
-import store from "./redux/stores/stores.js";
 import {fetchUserFromToken, logout} from "./redux/reducers/authSlice.js";
 import {useEffect} from "react";
 
@@ -75,13 +74,13 @@ function App(props) {
             icon: <CoPresentIcon/>,
             pattern: 'vendors{/:vendorId}*',
         },
-        ...(session && session.user ? [
-            {
-                segment: 'write-review',
-                title: 'Scrie un review',
-                icon: <DescriptionIcon/>,
-            },
-        ] : []),
+        // ...(session && session.user ? [
+        //     {
+        //         segment: 'write-review',
+        //         title: 'Scrie un review',
+        //         icon: <DescriptionIcon/>,
+        //     },
+        // ] : []),
     ];
 
     const authentication = React.useMemo(() => {
@@ -107,7 +106,6 @@ function App(props) {
     }, [dispatch, navigate, userData]);
 
     return (
-        // <Provider store={store}>
             <ReactRouterAppProvider
                 session={session}
                 authentication={authentication}
@@ -130,7 +128,6 @@ function App(props) {
 
             </ReactRouterAppProvider>
             // preview-end
-        // </Provider>
     );
 }
 

@@ -66,6 +66,10 @@ const VendorService = () => {
         navigate(`/services/${serviceId}/reviews`);
     };
 
+    const navigateToAddNewService = () => {
+        navigate(`/vendors/${vendorId}/services/add`);
+    };
+
     return (
         <Box sx={{ padding: 3 }}>
             {/* Highlighted Vendor Name */}
@@ -110,7 +114,7 @@ const VendorService = () => {
                                     color="primary"
                                     onClick={() => handleWriteReview(service.id)}
                                 >
-                                    Write Review
+                                    Scrie Review
                                 </Button>
 
                                 <Button
@@ -118,13 +122,21 @@ const VendorService = () => {
                                     color="secondary"
                                     onClick={() => handleViewReviews(service.id)}
                                 >
-                                    View Reviews
+                                    Vezi Review-uri
                                 </Button>
                             </Box>
                         </CardContent>
                     </Card>
                 ))}
             </Box>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={navigateToAddNewService}
+                sx={{ marginTop: 2}}
+            >
+                Adauga un nou serviciu
+            </Button>
         </Box>
     );
 }

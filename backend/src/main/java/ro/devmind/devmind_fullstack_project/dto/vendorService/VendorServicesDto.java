@@ -1,6 +1,7 @@
-package ro.devmind.devmind_fullstack_project.dto.vendor;
+package ro.devmind.devmind_fullstack_project.dto.vendorService;
 
 import lombok.Data;
+import ro.devmind.devmind_fullstack_project.dto.vendor.VendorSummaryResponseDto;
 
 import java.time.LocalDateTime;
 
@@ -15,4 +16,6 @@ public class VendorServicesDto {
     private Integer reviewCount;
     private Double averageRating;
     private LocalDateTime createdAt;
+    private Integer vendorId;
+    private Integer userId;
 }

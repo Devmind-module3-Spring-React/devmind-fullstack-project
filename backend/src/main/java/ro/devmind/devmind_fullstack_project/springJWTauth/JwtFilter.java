@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ro.devmind.devmind_fullstack_project.model.Role;
 import ro.devmind.devmind_fullstack_project.model.User;
-import ro.devmind.devmind_fullstack_project.service.UserService;
+import ro.devmind.devmind_fullstack_project.service.user.UserService;
 
 import java.io.IOException;
 import java.util.List;

@@ -102,6 +102,12 @@ body{
     flex-direction: column;
     transition: .5s ease-in-out;
 }
+/* Add margin to the login and signup fields */
+.login-container .input-box,
+.register-container .input-box {
+    margin-bottom: 10px; 
+}
+
 .register-container{
     position: absolute;
     right: 4px;

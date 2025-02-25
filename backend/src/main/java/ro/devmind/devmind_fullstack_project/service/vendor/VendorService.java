@@ -1,9 +1,7 @@
-package ro.devmind.devmind_fullstack_project.service;
+package ro.devmind.devmind_fullstack_project.service.vendor;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.devmind.devmind_fullstack_project.dto.vendor.VendorCreateDto;
 import ro.devmind.devmind_fullstack_project.exception.DuplicateResourceException;
@@ -23,7 +21,7 @@ import java.util.List;
 public class VendorService {
     //fields are final so they do not require Autowired, injection is handled by RequiredArgsConstructor
     private final VendorsRepository vendorRepository;
-    private final UsersRepository userRepository; //TODO: only for getting user ID sent hardcoded from frontend. to be removed later
+    private final UsersRepository userRepository;
 
     public List<Vendor> getAllVendors() {
         return vendorRepository.findAll();
@@ -48,6 +46,10 @@ public class VendorService {
         if (createDto.getCompanyEmail() != null &&
                 vendorRepository.existsByCompanyEmail(createDto.getCompanyEmail())) {
             throw new DuplicateResourceException("Company email already exists");
+        }
+        if (createDto.getPhoneNumber() != null &&
+                vendorRepository.existsByPhoneNumber(createDto.getPhoneNumber())) {
+            throw new DuplicateResourceException("Phone number already exists");
         }
 
         Vendor vendor = new Vendor();

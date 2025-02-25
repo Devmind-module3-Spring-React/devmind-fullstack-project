@@ -95,7 +95,7 @@ const AddVendor = () => {
             })
             .then(newVendor => {
                 dispatch(addVendor(newVendor));
-                navigate('/vendors'); //get back to all vendors route
+                navigate('/vendors', { replace: true }); //get back to all vendors route + replace addVendor page
             })
             .catch(error => {
                 console.error('Error adding Vendor:', error);
@@ -120,7 +120,7 @@ const AddVendor = () => {
                                 fullWidth
                                 margin="normal"
                                 name="companyName"
-                                label="Company Name"
+                                label="Nume furnizor"
                                 value={formData.companyName}
                                 onChange={handleInputChange}
                                 error={!!errors.companyName}
@@ -132,7 +132,7 @@ const AddVendor = () => {
                                 fullWidth
                                 margin="normal"
                                 name="companyEmail"
-                                label="Company Email"
+                                label="Email"
                                 type="email" //adds validation for email
                                 value={formData.companyEmail}
                                 onChange={handleInputChange}
@@ -142,7 +142,7 @@ const AddVendor = () => {
                                 fullWidth
                                 margin="normal"
                                 name="location"
-                                label="Location"
+                                label="Locatie"
                                 value={formData.location}
                                 onChange={handleInputChange}
                                 error={!!errors.location}
@@ -166,7 +166,7 @@ const AddVendor = () => {
                                 fullWidth
                                 margin="normal"
                                 name="phoneNumber"
-                                label="Phone Number"
+                                label="Numar de  telefon"
                                 value={formData.phoneNumber}
                                 onChange={handleInputChange}
                             />
@@ -190,7 +190,7 @@ const AddVendor = () => {
                                     variant="contained"
                                     color="primary"
                                 >
-                                    Add Vendor
+                                    ADAUGA FURNIZOR
                                 </Button>
 
                         </Box>
