@@ -81,7 +81,7 @@ const VendorsList = () => {
                                     </a>
                                 </Typography>
                                 <Typography variant="body1" color="primary" sx={{mt: 2}}>
-                                    Rating: {vendor.rating ? vendor.rating : 'N/A'}
+                                    Rating: {vendor.rating ? vendor.rating.toFixed(1) : 'No reviews yet'}
                                 </Typography>
                             </CardContent>
                         </Card>

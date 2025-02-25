@@ -1,12 +1,10 @@
 package ro.devmind.devmind_fullstack_project.controller;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ro.devmind.devmind_fullstack_project.dto.user.UserLoginRequestDto;
-import ro.devmind.devmind_fullstack_project.service.UserService;
+import ro.devmind.devmind_fullstack_project.service.user.UserService;
 
 @RestController
 @RequestMapping("api/v1/")

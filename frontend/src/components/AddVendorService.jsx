@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Box, Container, Typography, TextField, Button, Rating, Paper,
+    Box, Container, Typography, TextField, Button, Paper,
     CircularProgress, Snackbar, Alert
 } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router';
+import {replace, useNavigate, useParams} from 'react-router';
 
-const WriteReview = () => {
-    const { serviceId } = useParams();
-    const [title, setTitle] = useState('');
-    const [body, setBody] = useState('');
-    const [rating, setRating] = useState(0);
+const AddVendorService = () => {
+    const [name, setName] = useState('');
+    const {vendorId} = useParams();
+    const [description, setDescription] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
@@ -30,39 +29,39 @@ const WriteReview = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!title || !body || rating === 0) {
-            setError('Please fill in all fields');
-            return;
-        }
+        // if (!name || !description) {
+        //     setError('Este necesara completarea campurilor marcate cu *');
+        //     return;
+        // }
 
         setLoading(true);
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8081/api/v1/reviews/create-new-review', {
+            //backticks should be used when using variables in the path ->> ` instead of '. or else the variable won't work
+            const response = await fetch(`http://localhost:8081/api/v1/vendors/${vendorId}/services/add`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${jwt}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    title,
-                    body,
-                    rating,
-                    serviceId,
+                    name,
+                    description,
+                    vendorId,
                     userId: user.id
                 })
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to submit review');
+                throw new Error(errorData.error || 'Serviciul furnizorului nu a putut fi adaugat. Te rugam sa reincerci.');
             }
 
-            setTitle('');
-            setBody('');
-            setRating(0);
+            setName('');
+            setDescription('');
             setSuccess(true);
+            navigate(`/vendors/${vendorId}/services`, { replace: true });
         } catch (err) {
             setError(err.message);
         } finally {
@@ -79,29 +78,20 @@ const WriteReview = () => {
         <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
             <Paper elevation={3} sx={{ p: 4 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
-                    Write a Review
+                    Creaza un nou serviciu
                 </Typography>
 
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                    <Typography component="legend">Rating</Typography>
-                    <Rating
-                        name="rating"
-                        value={rating}
-                        onChange={(event, newValue) => setRating(newValue)}
-                        precision={1}
-                        size="large"
-                        sx={{ mt: 1 }}
-                    />
 
                     <TextField
                         margin="normal"
                         required
                         fullWidth
                         id="title"
-                        label="Review Title"
+                        label="Serviciul folosit"
                         name="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
 
                     <TextField
@@ -110,11 +100,11 @@ const WriteReview = () => {
                         fullWidth
                         id="body"
                         name="body"
-                        label="Your Review"
+                        label="Descrie pe scurt serviciul"
                         multiline
                         rows={6}
-                        value={body}
-                        onChange={(e) => setBody(e.target.value)}
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
 
                     <Button
@@ -124,7 +114,7 @@ const WriteReview = () => {
                         sx={{ mt: 3, mb: 2 }}
                         disabled={loading}
                     >
-                        {loading ? <CircularProgress size={24} /> : 'Submit Review'}
+                        {loading ? <CircularProgress size={24} /> : 'Adauga serviciu'}
                     </Button>
                 </Box>
             </Paper>
@@ -137,11 +127,11 @@ const WriteReview = () => {
 
             <Snackbar open={success} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                    Review submitted successfully!
+                    Noul serviciu a fost adaugat cu succes!
                 </Alert>
             </Snackbar>
         </Container>
     );
 };
 
-export default WriteReview;
+export default AddVendorService;

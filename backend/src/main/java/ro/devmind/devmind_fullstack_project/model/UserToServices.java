@@ -2,6 +2,8 @@ package ro.devmind.devmind_fullstack_project.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import ro.devmind.devmind_fullstack_project.enums.ServiceStatus;
 
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Table(name="users_to_services")
+@Getter
+@Setter
 public class UserToServices {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

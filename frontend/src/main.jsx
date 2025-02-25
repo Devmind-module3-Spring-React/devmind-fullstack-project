@@ -5,7 +5,7 @@ import App from './App.jsx'
 import {createBrowserRouter, RouterProvider} from "react-router";
 import Layout from "./components/Layout.jsx";
 import VendorsList from "./components/VendorsList.jsx";
-import WriteReview from "./components/WriteReview.jsx";
+import AddReview from "./components/AddReview.jsx";
 import DashboardPage from "./components/DashboardPage.jsx";
 import VendorService from "./components/VendorService.jsx";
 import AddVendor from "./components/AddVendor.jsx";
@@ -13,6 +13,7 @@ import AuthForm from "./components/LoginSignup/AuthForm.jsx";
 import {Provider} from "react-redux";
 import store from "./redux/stores/stores.js";
 import ServiceReviewsList from "./components/ServiceReviewsList.jsx";
+import AddVendorService from "./components/AddVendorService.jsx";
 
 
 const router = createBrowserRouter([
@@ -41,11 +42,15 @@ const router = createBrowserRouter([
                     },
                     {
                         path: 'services/:serviceId/write-review',
-                        Component: WriteReview,
+                        Component: AddReview,
                     },
                     {
                         path: '/services/:serviceId/reviews',
                         Component: ServiceReviewsList,
+                    },
+                    {
+                        path: '/vendors/:vendorId/services/add',
+                        Component: AddVendorService,
                     },
                 ],
             },

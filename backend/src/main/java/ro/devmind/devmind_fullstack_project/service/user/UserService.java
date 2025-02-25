@@ -1,4 +1,4 @@
-package ro.devmind.devmind_fullstack_project.service;
+package ro.devmind.devmind_fullstack_project.service.user;
 
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;

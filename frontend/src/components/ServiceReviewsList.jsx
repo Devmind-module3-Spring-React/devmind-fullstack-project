@@ -43,7 +43,7 @@ const ServiceReviewsList = () => {
 
     return (
         <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-            <Typography variant="h4" gutterBottom>Service Reviews</Typography>
+            {/*<Typography variant="h4" gutterBottom>Review-uri pentru </Typography>*/}
             <Box sx={{ mt: 3 }}>
                 {reviews.length === 0 ? (
                     <Typography>No reviews yet.</Typography>
