@@ -12,6 +12,7 @@ import AddVendor from "./components/AddVendor.jsx";
 import AuthForm from "./components/LoginSignup/AuthForm.jsx";
 import {Provider} from "react-redux";
 import store from "./redux/stores/stores.js";
+import ServiceReviewsList from "./components/ServiceReviewsList.jsx";
 
 
 const router = createBrowserRouter([
@@ -32,20 +33,20 @@ const router = createBrowserRouter([
                     },
                     {
                         path: 'vendors/:vendorId/services',
-                        element: <VendorService />,
+                        Component: VendorService,
                     },
                     {
                         path: 'vendors/add',
                         Component: AddVendor,
                     },
                     {
-                        path: 'write-review/',
+                        path: 'services/:serviceId/write-review',
                         Component: WriteReview,
                     },
-                    // {
-                    //     path: 'write-review/:userName',
-                    //     Component: WriteReview,
-                    // },
+                    {
+                        path: '/services/:serviceId/reviews',
+                        Component: ServiceReviewsList,
+                    },
                 ],
             },
             {

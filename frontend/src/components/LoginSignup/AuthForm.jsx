@@ -62,7 +62,7 @@ const AuthForm = () => {
                             </a>
                         </span>
                     </div>
-                    <header>{isLogin ? "Login" : "Sign Up"}</header>
+                    <header className="header-login-page">{isLogin ? "Login" : "Sign Up"}</header>
 
                     <form onSubmit={handleSubmit}>
                         {!isLogin && (
