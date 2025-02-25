@@ -2,6 +2,7 @@ package ro.devmind.devmind_fullstack_project.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +68,7 @@ public class Vendor {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonManagedReference
     private List<VendorServices> vendorServices;
 
     @PrePersist

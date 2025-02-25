@@ -1,5 +1,6 @@
 package ro.devmind.devmind_fullstack_project.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -35,10 +36,12 @@ public class Attachment {
 
     @ManyToOne
     @JoinColumn (name = "vendor_service_id")
+    @JsonBackReference
     private VendorServices vendorServices; //populate this column if vendor Portfolio attachment
 
     @ManyToOne
     @JoinColumn(name = "user_to_services_id", nullable = true)
+    @JsonBackReference
     private UserToServices userToServices; //populate this column if Proof of use
 
     @ManyToOne

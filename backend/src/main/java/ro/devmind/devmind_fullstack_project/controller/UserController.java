@@ -39,7 +39,7 @@ public class UserController {
 
     }
 
-    // persist user login in multiple tabs
+    // persist user login in multiple tabs - validate jwt token and return the user again
     @GetMapping("/api/v1/validate-token")
     public ResponseEntity<UserResponseDto> validateToken(@RequestHeader("Authorization") String authHeader) {
         // Extract token from "Bearer <token>"

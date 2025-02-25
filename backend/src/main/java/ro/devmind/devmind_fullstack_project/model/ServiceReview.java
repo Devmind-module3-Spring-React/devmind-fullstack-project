@@ -1,4 +1,6 @@
 package ro.devmind.devmind_fullstack_project.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +21,8 @@ public class ServiceReview {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id", nullable = false)
+    //@JsonBackReference
+    @JsonIgnore
     private VendorServices vendorServices;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -62,6 +66,11 @@ public class ServiceReview {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
     @PreUpdate
     protected void onUpdate() {

@@ -1,16 +1,42 @@
 // VendorServices.jsx
 import React, { useState, useEffect } from 'react';
-import {useLocation, useParams} from 'react-router';
+import {useLocation, useNavigate, useParams} from 'react-router';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Card, CardContent, CircularProgress, Rating } from '@mui/material';
+import {Button, Card, CardContent, CircularProgress, Rating} from '@mui/material';
+import {useSelector} from "react-redux";
 
-const VendorServices = () => {
+
+const VendorService = () => {
     const { vendorId } = useParams();
     const [vendorServices, setVendorServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const location = useLocation();  //  Get the navigation state
     const servicesLink = location.state?.servicesLink; // Get the HATEOAS link from navigation state
+    const navigate = useNavigate();
+
+    const vendors = useSelector(state => state.vendors.vendors);
+
+    const [vendorName, setVendorName] = useState("Unknown Vendor");
+
+
+    useEffect(() => {
+        //filter vendor from redux state
+        const vendor = vendors.find(v => v.id === parseInt(vendorId));
+        if (vendor) {
+            setVendorName(vendor.companyName); // Update vendor name from Redux
+        } else {
+            // If not in Redux (e.g. after page refresh) - fetch it from API
+            fetch(`http://localhost:8081/api/v1/vendors/${vendorId}`)
+                .then(response => response.json())
+                .then(data => {
+                    setVendorName(data.companyName);
+                })
+                .catch(error => {
+                    console.error('Error fetching vendor details:', error);
+                });
+        }
+    }, [vendors, vendorId]);
 
     useEffect(() => {
         //Added fetchUrl for the case when user decides to manually navigate using browserURL
@@ -32,9 +58,28 @@ const VendorServices = () => {
         return <CircularProgress />;
     }
 
+    const handleWriteReview = (serviceId) => {
+        navigate(`/services/${serviceId}/write-review`);
+    };
+
+    const handleViewReviews = (serviceId) => {
+        navigate(`/services/${serviceId}/reviews`);
+    };
+
     return (
         <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>Servicii</Typography>
+            {/* Highlighted Vendor Name */}
+            <Typography
+                variant="h5"
+                sx={{
+                    color: 'inherit', // Keeps the default text color
+                    textAlign: 'left',
+                    mb: 3,
+                    letterSpacing: '1.5px', // Adds some spacing between letters
+                    lineHeight: '1.2', // Adjusts the line height for better readability
+                }}>
+                Servicii oferite de <span style={{ color: '#6A5ACD', fontWeight: 'bold',}}>{vendorName}</span>
+                    </Typography>
             <Box
                 sx={{
                     display: 'flex',
@@ -43,19 +88,38 @@ const VendorServices = () => {
                 }}
             >
                 {vendorServices.map((service) => (
-                    <Card key={service.id} sx={{ width: { xs: '100%', sm: '48%', md: '30%' } }}>
+                    <Card key={service.id} sx={{width: {xs: '100%', sm: '48%', md: '30%'}}}>
+
                         <CardContent>
                             <Typography variant="h6">{service.name}</Typography>
                             <Typography variant="body2" color="textSecondary">{service.description}</Typography>
-                            <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
+                            <Box sx={{mt: 2, display: 'flex', alignItems: 'center'}}>
                                 <Rating
                                     value={service.rating || 0}
                                     precision={0.1}
                                     readOnly={true}
                                 />
-                                <Typography variant="body1" color="primary" sx={{ ml: 1 }}>
+                                <Typography variant="body1" color="primary" sx={{ml: 1}}>
                                     {service.rating ? service.rating.toFixed(1) : 'N/A'}
                                 </Typography>
+                            </Box>
+
+                            <Box sx={{mt: 2, display: 'flex', gap: 1}}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleWriteReview(service.id)}
+                                >
+                                    Write Review
+                                </Button>
+
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    onClick={() => handleViewReviews(service.id)}
+                                >
+                                    View Reviews
+                                </Button>
                             </Box>
                         </CardContent>
                     </Card>
@@ -65,4 +129,4 @@ const VendorServices = () => {
     );
 }
 
-export default VendorServices;
+export default VendorService;

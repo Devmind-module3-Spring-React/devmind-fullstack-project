@@ -20,6 +20,12 @@ body{
     align-items: center;
     min-height: 110vh;
     background: rgba(39, 39, 39, 0.4);
+
+    background-image: url("./loginBackgroud.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(0px) contrast(1.1)
 }
 .nav{
     position: fixed;
@@ -116,7 +122,7 @@ body{
     color: #fff;
     margin-left: 5px;
 }
-header{
+.header-login-page{
     color: #fff;
     font-size: 30px;
     text-align: center;

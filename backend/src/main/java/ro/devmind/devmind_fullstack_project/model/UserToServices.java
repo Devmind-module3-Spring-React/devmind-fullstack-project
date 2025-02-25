@@ -1,5 +1,6 @@
 package ro.devmind.devmind_fullstack_project.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import ro.devmind.devmind_fullstack_project.enums.ServiceStatus;
 
@@ -30,6 +31,7 @@ public class UserToServices {
     private ServiceStatus status; //BOOKED, USED, CANCELLED
 
     @OneToMany(mappedBy = "userToServices", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Attachment> proofOfUse = new ArrayList<>();
 
 }

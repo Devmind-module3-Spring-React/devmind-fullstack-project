@@ -1,10 +1,13 @@
 package ro.devmind.devmind_fullstack_project.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,14 +41,15 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "users_to_services",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id")
-    )
-    public Set<VendorServices> chosenVendorServices;
+//	  TODO: Same relationship is mapped twice --> there is also an object of type UserToServices
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+//    @JoinTable(
+//            name = "users_to_services",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "service_id")
+//    )
+//    @JsonManagedReference
+//    public Set<VendorServices> chosenVendorServices;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
@@ -58,6 +62,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     public Set<Role> roles;
+
+    //map relationship both sides
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<ServiceReview> reviews = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
