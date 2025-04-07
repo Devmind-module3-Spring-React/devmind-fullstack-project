@@ -1,5 +1,6 @@
 package ro.devmind.devmind_fullstack_project.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ro.devmind.devmind_fullstack_project.dto.review.ServiceReviewDto;
+import ro.devmind.devmind_fullstack_project.exception.ResourceNotFoundException;
 import ro.devmind.devmind_fullstack_project.model.ServiceReview;
 import ro.devmind.devmind_fullstack_project.model.User;
 import ro.devmind.devmind_fullstack_project.model.Vendor;
@@ -98,6 +100,39 @@ public class ReviewController {
         }
         return ResponseEntity.ok(reviewsDto);
 
+    }
+
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<ServiceReviewDto> updateReview(@PathVariable Integer id,
+                                                  @Valid @RequestBody ServiceReviewDto reviewDto,
+                                                  @AuthenticationPrincipal String userName) {
+        // Get the existing review
+        ServiceReview existingReview = reviewRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + id));
+
+//        // Check if the current user is the author of the review
+//        if (!existingReview.getUserId().equals(currentUser.getId())) {
+//            throw new UnauthorizedException("You can only edit your own reviews");
+//        }
+
+        // Update the review fields
+        existingReview.setTitle(reviewDto.getTitle());
+        existingReview.setBody(reviewDto.getBody());
+        existingReview.setRating(reviewDto.getRating());
+        // Don't update the username or userId (should remain the same)
+        // Don't update the creation date
+
+        // Save the updated review
+        ServiceReview savedReview = reviewRepository.save(existingReview);
+        ServiceReviewDto updatedReview = new ServiceReviewDto();
+        reviewDto.setId(savedReview.getId());
+        reviewDto.setTitle(savedReview.getTitle());
+        reviewDto.setBody(savedReview.getBody());
+        reviewDto.setRating(savedReview.getRating());
+        reviewDto.setUsername(savedReview.getUser().getUsername());
+        reviewDto.setCreatedAt(savedReview.getCreatedAt());
+        return ResponseEntity.ok(updatedReview);
+        //TODO: recalculate ratings ->> see create-new-review method
     }
 
 }
