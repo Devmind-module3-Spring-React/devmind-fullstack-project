@@ -46,7 +46,7 @@ public class VendorResponseAssembler implements RepresentationModelAssembler<Ven
         vendorResponseDto.setWebsiteUrl(vendor.getWebsiteUrl());
 
         if (null != vendor.getPhoneNumber()) {
-            vendorResponseDto.setDescription(vendor.getPhoneNumber());
+            vendorResponseDto.setPhoneNumber(vendor.getPhoneNumber());
         }
 
         vendorResponseDto.setClaimed(vendor.isClaimed());

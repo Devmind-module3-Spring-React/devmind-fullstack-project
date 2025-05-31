@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (null != user) {
                 //Use the UsernamePasswordAuthenticationToken constructor that sets authenticated true - the one with 3 parameters
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user.getUsername(), null, parseAuthorities(user.getRoles())));
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, parseAuthorities(user.getRoles())));
             }
         }
         //Pass control to the next filter in the chain after current filter has done processing.
