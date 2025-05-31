@@ -17,5 +17,4 @@ public class VendorServicesDto {
     private Double averageRating;
     private LocalDateTime createdAt;
     private Integer vendorId;
-    private Integer userId;
 }
