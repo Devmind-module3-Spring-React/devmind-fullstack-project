@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ro.devmind.devmind_fullstack_project.dto.review.ServiceReviewDto;
+import ro.devmind.devmind_fullstack_project.dto.user.CustomUserDetails;
 import ro.devmind.devmind_fullstack_project.exception.ResourceNotFoundException;
 import ro.devmind.devmind_fullstack_project.model.ServiceReview;
 import ro.devmind.devmind_fullstack_project.model.User;
@@ -35,9 +36,9 @@ public class ReviewController {
 
 //    Extract the username from SecurityContext ->> see JwtFilter SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user.getUsername(), null, parseAuthorities(user.getRoles())));
     @PostMapping("/create-new-review")
-    public ResponseEntity<ServiceReviewDto> writeReview(@RequestBody ServiceReviewDto serviceReviewDto, @AuthenticationPrincipal String userName) {
+    public ResponseEntity<ServiceReviewDto> writeReview(@RequestBody ServiceReviewDto serviceReviewDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
         ServiceReview serviceReview = new ServiceReview();
-        User userEntity = userRepository.findByUsername(userName).get();
+        User userEntity = userRepository.findByUsername(userDetails.getUsername()).get();
 
         serviceReview.setUser(userEntity);
         serviceReview.setRating(serviceReviewDto.getRating());

@@ -3,6 +3,7 @@ package ro.devmind.devmind_fullstack_project.service.vendorService;
 
 import org.springframework.stereotype.Service;
 import ro.devmind.devmind_fullstack_project.assembler.service.VendorServiceAssembler;
+import ro.devmind.devmind_fullstack_project.dto.user.CustomUserDetails;
 import ro.devmind.devmind_fullstack_project.dto.vendorService.VendorServicesDto;
 import ro.devmind.devmind_fullstack_project.enums.ServiceStatus;
 import ro.devmind.devmind_fullstack_project.model.User;
@@ -19,6 +20,7 @@ public class VendorServiceService {
 
     private final VendorServicesRepository vendorServicesRepository;
     private final VendorsRepository vendorsRepository;
+    private final UsersRepository usersRepository;
     private final UserToServicesRepository userToServicesRepository;
     private final VendorServiceAssembler vendorServiceAssembler;
 
@@ -27,11 +29,12 @@ public class VendorServiceService {
                                          userToServicesRepository, VendorServiceAssembler vendorServiceAssembler) {
         this.vendorServicesRepository = vendorServicesRepository;
         this.vendorsRepository = vendorsRepository;
+        this.usersRepository = userRepository;
         this.userToServicesRepository = userToServicesRepository;
         this.vendorServiceAssembler = vendorServiceAssembler;
     }
 
-    public VendorServicesDto addVendorService(VendorServicesDto vendorServicesDto, User user) {
+    public VendorServicesDto addVendorService(VendorServicesDto vendorServicesDto, CustomUserDetails userDetails) {
         Vendor vendor = vendorsRepository.findById(vendorServicesDto.getVendorId())
                 .orElseThrow(() -> new IllegalArgumentException("Furnizorul nu există"));
 
@@ -44,6 +47,10 @@ public class VendorServiceService {
         vendorServicesDto = vendorServiceAssembler.toDto(vendorService);
 
         UserToServices userToServices = new UserToServices();
+
+        User user = usersRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Utilizator inexistent"));
+
         userToServices.setUser(user);
         userToServices.setVendorServices(vendorService);
         userToServices.setStatus(ServiceStatus.USED); // TODO: Do not set default status. take it from frontend

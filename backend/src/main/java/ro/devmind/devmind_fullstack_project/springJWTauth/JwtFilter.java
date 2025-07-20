@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ro.devmind.devmind_fullstack_project.dto.user.CustomUserDetails;
 import ro.devmind.devmind_fullstack_project.model.Role;
 import ro.devmind.devmind_fullstack_project.model.User;
 import ro.devmind.devmind_fullstack_project.service.user.UserService;
@@ -33,10 +34,11 @@ public class JwtFilter extends OncePerRequestFilter {
         if (null != bearerToken && bearerToken.startsWith("Bearer ")) {
 		//Check the first character set after "Bearer "
             User user = userService.validateUser(bearerToken);
+            CustomUserDetails userDetails = new CustomUserDetails(user);
 
             if (null != user) {
                 //Use the UsernamePasswordAuthenticationToken constructor that sets authenticated true - the one with 3 parameters
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, parseAuthorities(user.getRoles())));
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, parseAuthorities(userDetails.getRoles())));
             }
         }
         //Pass control to the next filter in the chain after current filter has done processing.
