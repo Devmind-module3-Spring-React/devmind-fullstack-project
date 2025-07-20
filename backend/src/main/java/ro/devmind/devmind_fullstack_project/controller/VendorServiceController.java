@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ro.devmind.devmind_fullstack_project.dto.user.CustomUserDetails;
 import ro.devmind.devmind_fullstack_project.dto.vendorService.VendorServicesDto;
-import ro.devmind.devmind_fullstack_project.model.User;
 import ro.devmind.devmind_fullstack_project.service.vendorService.VendorServiceService;
 
 @Controller
@@ -21,8 +21,8 @@ public class VendorServiceController {
 
     @PostMapping("/add")
     //taking the user from the security context not from frontend
-    public ResponseEntity<VendorServicesDto> addVendorService(@RequestBody VendorServicesDto savedService, @AuthenticationPrincipal User user) {
-        savedService = vendorServiceService.addVendorService(savedService, user);
+    public ResponseEntity<VendorServicesDto> addVendorService(@RequestBody VendorServicesDto savedService, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        savedService = vendorServiceService.addVendorService(savedService, userDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedService);
 
     }
