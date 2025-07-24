@@ -13,6 +13,6 @@ public class ServiceReviewDto {
     private int rating;
     private LocalDateTime createdAt;
 
-    private int serviceId;
-    private int userId;
+    private Integer serviceId;
+    private Integer userId;
 }
