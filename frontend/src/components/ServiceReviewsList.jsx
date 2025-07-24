@@ -19,6 +19,7 @@ const ServiceReviewsList = () => {
 
     // Get the current user
     const user = useSelector((state) => state.auth.user);
+    const jwt = useSelector((state) => state.auth.jwt);
 
     useEffect(() => {
         fetchReviews();
@@ -73,6 +74,7 @@ const ServiceReviewsList = () => {
             headers: {
                 'Content-Type': 'application/json',
                 // Add any authorization headers if needed
+                'Authorization': `Bearer ${jwt}`
             },
             body: JSON.stringify(updatedReview)
         })
