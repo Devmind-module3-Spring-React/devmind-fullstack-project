@@ -71,12 +71,18 @@ const VendorsList = () => {
                                 <Typography variant="body2" color="textSecondary">{vendor.location}</Typography>
                                 <Typography variant="body2" sx={{mt: 2}}>{vendor.description}</Typography>
                                 <Typography variant="body2" sx={{mt: 2}}>{vendor.phoneNumber}</Typography>
-                                <Typography variant="body2" sx={{mt: 2}}>
+                                <Typography variant="body2" sx={{mt: 2, wordBreak: 'break-all'}}>
                                     <a
                                         onClick={(event) => event.stopPropagation()} // Prevents Card's onClick from triggering when clicking vendor's website
                                         href={vendor.websiteUrl}
                                         target="_blank" rel="noopener noreferrer"
-                                        style={{color: 'blue', textDecoration: 'underline'}}>
+                                        style={{
+                                            color: 'blue',
+                                            textDecoration: 'underline',
+                                            wordBreak: 'break-all',
+                                            display: 'inline-block',
+                                            maxWidth: '100%',
+                                        }}>
                                         {vendor.websiteUrl}
                                     </a>
                                 </Typography>

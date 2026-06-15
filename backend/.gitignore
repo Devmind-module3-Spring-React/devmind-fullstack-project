@@ -26,5 +26,8 @@ replay_pid*
 #InteliJ files
 .idea/
 
+#VS Code files
+.vscode/
+
 #Target folder
 /target/

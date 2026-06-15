@@ -21,9 +21,13 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-//    Extract the username from SecurityContext ->> see JwtFilter SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user.getUsername(), null, parseAuthorities(user.getRoles())));
+    // Extract the username from SecurityContext ->> see JwtFilter
+    // SecurityContextHolder.getContext().setAuthentication(new
+    // UsernamePasswordAuthenticationToken(user.getUsername(), null,
+    // parseAuthorities(user.getRoles())));
     @PostMapping("/create-new-review")
-    public ResponseEntity<ServiceReviewDto> writeReview(@RequestBody ServiceReviewDto serviceReviewDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<ServiceReviewDto> writeReview(@RequestBody ServiceReviewDto serviceReviewDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         ServiceReviewDto savedReview = reviewService.writeReview(serviceReviewDto, userDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
@@ -36,10 +40,17 @@ public class ReviewController {
 
     @PutMapping("/{id}/edit")
     public ResponseEntity<ServiceReviewDto> updateReview(@PathVariable Integer id,
-                                                  @Valid @RequestBody ServiceReviewDto reviewDto,
-                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
+            @Valid @RequestBody ServiceReviewDto reviewDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         ServiceReviewDto updatedReview = reviewService.updateReview(id, reviewDto, userDetails);
         return ResponseEntity.ok(updatedReview);
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<ServiceReviewDto> deleteReview(@PathVariable Integer id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        ServiceReviewDto deletedReview = reviewService.deleteReview(id, userDetails);
+        return ResponseEntity.ok(deletedReview);
     }
 
 }

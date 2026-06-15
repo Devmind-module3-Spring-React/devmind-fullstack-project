@@ -1,6 +1,8 @@
 package ro.devmind.devmind_fullstack_project.service.review;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,8 @@ public class ReviewService {
     @Transactional
     public ServiceReviewDto writeReview(ServiceReviewDto serviceReviewDto, CustomUserDetails userDetails) {
         String username = userDetails.getUsername();
-        User userEntity = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Utilizatorul nu a fost gasit: "  + username));
+        User userEntity = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilizatorul nu a fost gasit: " + username));
         VendorServices vendorService = vendorServicesRepository.findById(serviceReviewDto.getServiceId()).get();
 
         ServiceReview serviceReview = new ServiceReview();
@@ -52,7 +55,7 @@ public class ReviewService {
         // calculate service rating based on average rating from reviews
         updateServiceRating(vendorService);
 
-        //Set Average rating for vendor depending on all its service reviews
+        // Set Average rating for vendor depending on all its service reviews
         updateVendorOverallRating(vendorService.getVendor());
 
         ServiceReviewDto result = serviceReviewAssembler.toDto(savedReview);
@@ -74,7 +77,7 @@ public class ReviewService {
     }
 
     private void updateVendorOverallRating(Vendor vendor) {
-        //Set Average rating for vendor depending on all its service reviews
+        // Set Average rating for vendor depending on all its service reviews
 
         List<VendorServices> services = vendorServicesRepository.findByVendor_Id(vendor.getId());
 
@@ -96,7 +99,7 @@ public class ReviewService {
 
     public List<ServiceReviewDto> getServiceReviews(Integer serviceId) {
         List<ServiceReview> reviews = reviewRepository.findByVendorServices_Id(serviceId);
-        List<ServiceReviewDto> serviceReviewDtos= new ArrayList<>();
+        List<ServiceReviewDto> serviceReviewDtos = new ArrayList<>();
 
         for (ServiceReview review : reviews) {
             ServiceReviewDto reviewDto = serviceReviewAssembler.toDto(review);
@@ -105,12 +108,13 @@ public class ReviewService {
         return serviceReviewDtos;
     }
 
-    public ServiceReviewDto updateReview(Integer id, ServiceReviewDto reviewDto, CustomUserDetails authenticatedUserDetails) {
+    public ServiceReviewDto updateReview(Integer id, ServiceReviewDto reviewDto,
+            CustomUserDetails authenticatedUserDetails) {
         // Get the existing review
         ServiceReview currentReview = reviewRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + id));
 
-//        // Check if the current user is the author of the review
+        // Check if the current user is the author of the review
         if (!currentReview.getUser().getId().equals(authenticatedUserDetails.getId())) {
             throw new UnauthorizedException("You can only edit your own reviews");
         }
@@ -131,6 +135,20 @@ public class ReviewService {
         updateVendorOverallRating(currentReview.getVendorServices().getVendor());
         return updatedReview;
 
+    }
+
+    public ServiceReviewDto deleteReview(Integer id, CustomUserDetails userDetails) {
+        ServiceReview review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + id));
+
+        if (!review.getUser().getId().equals(userDetails.getId())) {
+            throw new UnauthorizedException("You can only delete your own reviews");
+        }
+
+        reviewRepository.delete(review);
+        updateServiceRating(review.getVendorServices());
+        updateVendorOverallRating(review.getVendorServices().getVendor());
+        return serviceReviewAssembler.toDto(review);
     }
 
 }

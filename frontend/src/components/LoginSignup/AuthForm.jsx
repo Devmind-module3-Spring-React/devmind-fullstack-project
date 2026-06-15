@@ -47,8 +47,6 @@ const AuthForm = () => {
         return <Navigate to="/" />;
     }
 
-
-
     return (
         <div className="wrapper">
             <div className="form-box">
