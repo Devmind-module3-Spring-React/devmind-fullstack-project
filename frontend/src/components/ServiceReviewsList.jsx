@@ -97,6 +97,33 @@ const ServiceReviewsList = () => {
             });
     };
 
+    const handleDeleteClick = (review) => {
+        if (!window.confirm('Are you sure you want to delete this review?')) {
+            return;
+        }
+
+        fetch(`http://localhost:8081/api/v1/reviews/${review.id}/delete`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete review');
+                }
+                return response.json();
+            })
+            .then(() => {
+                // Update the local state by removing the deleted review
+                const updatedReviews = reviews.filter(r => r.id !== review.id);
+                setReviews(updatedReviews);
+            })
+            .catch(err => {
+                setError(err.message);
+            });
+    };
+
     if (loading) {
         return (
             <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
@@ -126,13 +153,23 @@ const ServiceReviewsList = () => {
                                         By {review.username} on {new Date(review.createdAt).toDateString()}
                                     </Typography>
                                     {user && user.username === review.username && (
-                                        <Button
-                                            variant="outlined"
-                                            size="small"
-                                            onClick={() => handleEditClick(review)}
-                                        >
-                                            Edit Review
-                                        </Button>
+                                        <Box sx={{ display: 'flex', gap: 1 }}>
+                                            <Button
+                                                variant="outlined"
+                                                size="small"
+                                                onClick={() => handleEditClick(review)}
+                                            >
+                                                Edit Review
+                                            </Button>
+                                            <Button
+                                                variant="outlined"
+                                                size="small"
+                                                color="error"
+                                                onClick={() => handleDeleteClick(review)}
+                                            >
+                                                Delete Review
+                                            </Button>
+                                        </Box>
                                     )}
                                 </Box>
                             </CardContent>

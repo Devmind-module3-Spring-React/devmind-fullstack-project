@@ -31,13 +31,14 @@ public class SecurityConfig {
                 }))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/login/**").permitAll()
-                       .requestMatchers("/api/v1/**").permitAll()
+                        .requestMatchers("/api/v1/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+                                "/swagger-resources/**", "/v3/api-docs.yaml")
+                        .permitAll()
                         .requestMatchers("/admin-only").hasRole("ADMIN")
                         .requestMatchers("/user-only").hasRole("USER")
                         .anyRequest().authenticated())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
